@@ -14,12 +14,45 @@ foreach (var player in g.Players)
 while (true)
 {
     //energy phase
-
+    var x = new Dictionary<Color, Dictionary<RiderType, Card>>();
+    foreach (var player in g.Players)
+    {
+        x[player.Color] = player.Player.PickCards();
+    }
     
     //movement phase
+    for (var i = g.Track.Length - 1; i >= 0; i--)
+    {
+        var square = g.Track[i];
+        if (square.Right is not null)
+        {
+            var card = x[square.Right.Color][square.Right.RiderType];
+            var target=i+card.Energy;
+            while (!g.Track[target].HasSpace)
+            {
+                target--;
+            }
+            g.Track[target].Place(g.Track[i].Right);
+            g.Track[i].Right = null;
+        }
+        if (square.Left is not null)
+        {
+            var card = x[square.Left.Color][square.Left.RiderType];
+            var target=i+card.Energy;
+            while (!g.Track[target].HasSpace)
+            {
+                target--;
+            }
+            g.Track[target].Place(g.Track[i].Left);
+            g.Track[i].Left = null;
+        }
+    }
     
     //end phase
-
+    //todo slipstream
+    //todo exhaustion
+    
+    //Thread.Sleep(TimeSpan.FromSeconds(5));
     Print(g);
 }
 
