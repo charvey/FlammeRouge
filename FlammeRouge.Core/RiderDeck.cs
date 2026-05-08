@@ -4,6 +4,15 @@ public class RiderDeck
 {
     private const int HAND_SIZE = 4;
 
+    public RiderDeck(Card[] cards)
+    {
+        Random.Shared.Shuffle(cards);
+        Cards = cards.ToList();
+    }
+
+    private List<Card> Cards { get; }
+    public List<Card> Discard { get; } = [];
+
     public static RiderDeck CreateSprinteur()
     {
         return new RiderDeck(Array.Empty<int>()
@@ -16,7 +25,7 @@ public class RiderDeck
             .ToArray<Card>()
         );
     }
-	
+
     public static RiderDeck CreateRouleur()
     {
         return new RiderDeck(Array.Empty<int>()
@@ -29,15 +38,6 @@ public class RiderDeck
             .ToArray<Card>()
         );
     }
-
-    public RiderDeck(Card[] cards)
-    {
-        Random.Shared.Shuffle(cards);
-        Cards = cards.ToList();
-    }
-
-    private List<Card> Cards { get; }
-    public List<Card> Discard { get; } = [];
 
     public List<Card> Draw()
     {
@@ -61,5 +61,8 @@ public class RiderDeck
         Discard.AddRange(cards);
     }
 
-    public void AddExhaustion() => Discard.Add(new ExhaustionCard());
+    public void AddExhaustion()
+    {
+        Discard.Add(new ExhaustionCard());
+    }
 }

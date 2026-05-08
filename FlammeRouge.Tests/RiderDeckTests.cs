@@ -4,9 +4,11 @@ namespace FlammeRouge.Tests;
 
 public class RiderDeckTests
 {
-    private RiderDeck Create(params int[] energy) => new(energy.Select(e => new EnergyCard(e)).ToArray<Card>());
-    
-    
+    private RiderDeck Create(params int[] energy)
+    {
+        return new RiderDeck(energy.Select(e => new EnergyCard(e)).ToArray<Card>());
+    }
+
     [Fact]
     public void DrawReturnsCards()
     {
@@ -20,13 +22,13 @@ public class RiderDeckTests
         Assert.Contains(hand, c => c.Energy == 4);
         Assert.Contains(hand, c => c.Energy == 5);
     }
-    
+
     [Fact]
     public void RecycleCardsShuffledBackIn()
     {
         var deck = Create(2, 3, 4, 5);
         var hand = deck.Draw();
-        
+
         deck.Recycle(hand.Skip(1).ToList());
 
         Assert.Equivalent(deck.Draw(), hand.Skip(1));
@@ -36,20 +38,20 @@ public class RiderDeckTests
     public void DiscardStartsEmpty()
     {
         var deck = new RiderDeck([]);
-        
+
         Assert.Empty(deck.Discard);
     }
-    
+
     [Fact]
     public void ExhaustionCardsAddedToDiscard()
     {
         var deck = new RiderDeck([]);
-        
+
         deck.AddExhaustion();
-        
+
         Assert.IsType<ExhaustionCard>(deck.Discard.Single());
     }
-    
+
     [Fact]
     public void DrawReturnsAllAvailable()
     {

@@ -17,7 +17,7 @@ public class RandomPlayer : Player
 {
     public override Dictionary<RiderType, int> PickStarting()
     {
-        return new()
+        return new Dictionary<RiderType, int>
         {
             { RiderType.Rouleur, Random.Shared.Next(5) },
             { RiderType.Sprinteur, Random.Shared.Next(5) }

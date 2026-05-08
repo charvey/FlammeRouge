@@ -2,60 +2,62 @@
 
 public record struct Square(Rider? Right, Rider? Left)
 {
-	public bool HasSpace => Right is null && Left is null;
-	
-	public void Place(Rider rider)
-	{
-		if (Right is null)
-		{
-			Right = rider;
-			return;
-		}
+    public bool HasSpace => Right is null && Left is null;
 
-		if (Left is null)
-		{
-			Left = rider;
-			return;
-		}
+    public void Place(Rider rider)
+    {
+        if (Right is null)
+        {
+            Right = rider;
+            return;
+        }
 
-		throw new InvalidOperationException(nameof(rider));
-	}
+        if (Left is null)
+        {
+            Left = rider;
+            return;
+        }
+
+        throw new InvalidOperationException(nameof(rider));
+    }
 }
 
 public record Rider(Color Color, RiderType RiderType);
 
 public class Game
 {
-	private const int STARTING_LINE = 5;
+    private const int STARTING_LINE = 5;
 
-	public void PlaceRider(Color color, RiderType riderType, int row)
-	{
-		if (row is < 0 or >= STARTING_LINE) throw new ArgumentOutOfRangeException(nameof(row));
+    public Game(Player[] players)
+    {
+        if (players.Length == 0 || players.Length > Enum.GetValues<Color>().Length)
+            throw new ArgumentOutOfRangeException(nameof(players));
+        Players = players.Select((player, i) => ((Color)i, player)).ToArray();
 
-		Track[row].Place(new Rider(color, riderType));
+        Track = new Square[9 * 6 + 12 * 2];
+    }
 
+    public Square[] Track { get; }
+    public (Color Color, Player Player)[] Players { get; }
 
-	}
-	
-	public Square[] Track { get; }
-	public (Color Color,Player Player)[] Players { get; }
+    public void PlaceRider(Color color, RiderType riderType, int row)
+    {
+        if (row is < 0 or >= STARTING_LINE) throw new ArgumentOutOfRangeException(nameof(row));
 
-	public Game(Player[] players)
-	{
-		if (players.Length == 0 || players.Length > Enum.GetValues<Color>().Length)
-			throw new ArgumentOutOfRangeException(nameof(players));
-		Players = players.Select((player, i) => ((Color)i, player)).ToArray();
-
-		Track= new Square[9 * 6 + 12 * 2];
-	}
+        Track[row].Place(new Rider(color, riderType));
+    }
 }
 
 public enum Color
 {
-	Red, Green, Blue, Black
+    Red,
+    Green,
+    Blue,
+    Black
 }
 
 public enum RiderType
 {
-	Sprinteur, Rouleur
+    Sprinteur,
+    Rouleur
 }

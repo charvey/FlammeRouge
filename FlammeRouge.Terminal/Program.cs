@@ -5,11 +5,10 @@ var g = new Game([new RandomPlayer(), new RandomPlayer()]);
 //assign starters
 foreach (var player in g.Players)
 {
-    var spots=player.Player.PickStarting();
+    var spots = player.Player.PickStarting();
     foreach (var spot in spots)
-        g.PlaceRider(player.Color,spot.Key,spot.Value);
+        g.PlaceRider(player.Color, spot.Key, spot.Value);
 }
-
 
 while (true)
 {
@@ -19,39 +18,38 @@ while (true)
     {
         x[player.Color] = player.Player.PickCards();
     }
-    
+
     //movement phase
     for (var i = g.Track.Length - 1; i >= 0; i--)
     {
         var square = g.Track[i];
         if (square.Right is not null)
         {
+            var rider = square.Right;
             var card = x[square.Right.Color][square.Right.RiderType];
-            var target=i+card.Energy;
+            var target = i + card.Energy;
             while (!g.Track[target].HasSpace)
-            {
                 target--;
-            }
-            g.Track[target].Place(g.Track[i].Right);
+            g.Track[target].Place(rider);
             g.Track[i].Right = null;
         }
+
         if (square.Left is not null)
         {
+            var rider = square.Left;
             var card = x[square.Left.Color][square.Left.RiderType];
-            var target=i+card.Energy;
+            var target = i + card.Energy;
             while (!g.Track[target].HasSpace)
-            {
                 target--;
-            }
-            g.Track[target].Place(g.Track[i].Left);
+            g.Track[target].Place(rider);
             g.Track[i].Left = null;
         }
     }
-    
+
     //end phase
     //todo slipstream
     //todo exhaustion
-    
+
     //Thread.Sleep(TimeSpan.FromSeconds(5));
     Print(g);
 }
