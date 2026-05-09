@@ -7,18 +7,26 @@ public class ConsoleGameRenderer
     public void Print(Game game)
     {
         Console.Clear();
+        Console.WriteLine(new string('-', game.Track.Length + 2));
         for (var i = 0; i < game.Track.Length; i++)
         {
             if (i == game.StartingLine || i == game.FinishingLine)
-                Console.WriteLine(new string('-', 5));
-            var square = game.Track[i];
-            Console.Write('|');
-            PrintRider(square.Right);
-            Console.Write('|');
-            PrintRider(square.Left);
-            Console.Write('|');
-            Console.WriteLine();
+                Console.Write('|');
+            PrintRider(game.Track[i].Left);
         }
+
+        Console.WriteLine();
+
+        Console.WriteLine(new string('-', game.Track.Length + 2));
+        for (var i = 0; i < game.Track.Length; i++)
+        {
+            if (i == game.StartingLine || i == game.FinishingLine)
+                Console.Write('|');
+            PrintRider(game.Track[i].Right);
+        }
+
+        Console.WriteLine();
+        Console.WriteLine(new string('-', game.Track.Length + 2));
     }
 
     private void PrintRider(Rider? rider)
