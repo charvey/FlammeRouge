@@ -41,6 +41,18 @@ public class Game
     public Square[] Track { get; }
     public (Color Color, Player Player)[] Players { get; }
 
+    public bool IsOver
+    {
+        get
+        {
+            for (var i = FinishingLine; i < Track.Length; i++)
+                if (!Track[i].HasSpace)
+                    return true;
+
+            return false;
+        }
+    }
+
     public void PlaceRider(Color color, RiderType riderType, int row)
     {
         if (row < 0 || row >= StartingLine) throw new ArgumentOutOfRangeException(nameof(row));

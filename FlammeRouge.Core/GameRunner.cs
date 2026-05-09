@@ -12,7 +12,7 @@ public class GameRunner(Game game, Action<Game> renderAction)
                 game.PlaceRider(player.Color, spot.Key, spot.Value);
         }
 
-        while (true)
+        while (!game.IsOver)
         {
             //energy phase
             var selections = new Dictionary<Color, Dictionary<RiderType, Card>>();
