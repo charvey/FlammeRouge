@@ -18,7 +18,7 @@ public record struct Square(Rider? Right, Rider? Left)
             return;
         }
 
-        throw new InvalidOperationException(nameof(rider));
+        throw new InvalidOperationException($"Can't place {nameof(rider)} on an occupied square");
     }
 }
 

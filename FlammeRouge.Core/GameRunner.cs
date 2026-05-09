@@ -9,7 +9,7 @@ public class GameRunner(Game game, Action<Game> renderAction)
         {
             var spots = player.Player.PickStarting();
             foreach (var spot in spots)
-                game.PlaceRider(player.Color, spot.Key, spot.Value);
+                game.PlaceRider(player.Color, spot.Type, spot.Square);
         }
 
         while (!game.IsOver)

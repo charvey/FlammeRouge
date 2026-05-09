@@ -12,7 +12,7 @@ public class RiderDeckTests
     [Fact]
     public void DrawReturnsCards()
     {
-        var deck = new RiderDeck([new EnergyCard(2), new EnergyCard(3), new EnergyCard(4), new EnergyCard(5)]);
+        var deck = Create(2, 3, 4, 5);
 
         var hand = deck.Draw();
 
@@ -55,7 +55,7 @@ public class RiderDeckTests
     [Fact]
     public void DrawReturnsAllAvailable()
     {
-        var deck = new RiderDeck([new EnergyCard(2), new EnergyCard(3)]);
+        var deck = Create(2, 3);
 
         var hand = deck.Draw();
 
