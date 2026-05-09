@@ -34,10 +34,10 @@ public class RandomPlayerTests : PlayerTests
 
 public class MinPlayerTests : PlayerTests
 {
-    protected override Player subject { get; } = new RandomPlayer();
+    protected override Player subject { get; } = new MinPlayer();
 }
 
 public class MaxPlayerTests : PlayerTests
 {
-    protected override Player subject { get; } = new RandomPlayer();
+    protected override Player subject { get; } = new MaxPlayer();
 }
