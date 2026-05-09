@@ -2,12 +2,11 @@ namespace FlammeRouge.Core;
 
 public abstract class Player
 {
-    protected readonly Dictionary<RiderType, RiderDeck> decks = new()
+    private readonly Dictionary<RiderType, RiderDeck> decks = new()
     {
         { RiderType.Rouleur, RiderDeck.CreateRouleur() },
         { RiderType.Sprinteur, RiderDeck.CreateSprinteur() }
     };
-
 
     //TODO make game aware to avoid placing on top
     protected abstract IEnumerable<RiderType> PickStartingRiderOrder();

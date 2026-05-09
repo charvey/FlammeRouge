@@ -7,9 +7,14 @@ public class GameRunnerTests
     [Fact]
     public void GameFinishes()
     {
-        var game = new Game([new RandomPlayer(), new RandomPlayer()]);
+        var subject = new GameRunner(new Dictionary<Color, Player>
+        {
+            { Color.Blue, new RandomPlayer() },
+            { Color.Green, new MaxPlayer() },
+            { Color.Red, new MinPlayer() }
+        }, _ => { });
 
-        new GameRunner(game, _ => { }).RunGameLoop();
+        var game = subject.RunGame();
 
         Assert.True(game.IsOver);
     }

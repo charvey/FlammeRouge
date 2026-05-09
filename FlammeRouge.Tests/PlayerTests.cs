@@ -9,7 +9,7 @@ public abstract class PlayerTests
     [Fact]
     public void StartingSquaresAreValid()
     {
-        var game = new Game([subject]);
+        var game = new Game([Color.Blue]);
 
         var starting = subject.PickStarting();
 
@@ -19,7 +19,7 @@ public abstract class PlayerTests
     [Fact]
     public void StartingPositionsCoverAllRiderTypes()
     {
-        var game = new Game([subject]);
+        var game = new Game([Color.Blue]);
 
         var starting = subject.PickStarting();
 

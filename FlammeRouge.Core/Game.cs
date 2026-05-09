@@ -26,11 +26,12 @@ public record Rider(Color Color, RiderType RiderType);
 
 public class Game
 {
-    public Game(Player[] players)
+    public Game(HashSet<Color> colors)
     {
-        if (players.Length == 0 || players.Length > Enum.GetValues<Color>().Length)
-            throw new ArgumentOutOfRangeException(nameof(players));
-        Players = players.Select((player, i) => ((Color)i, player)).ToArray();
+        if (colors.Count == 0 || colors.Count > Enum.GetValues<Color>().Length)
+            throw new ArgumentOutOfRangeException(nameof(colors));
+        Colors = colors.ToArray();
+        Random.Shared.Shuffle(Colors);
 
         Track = new Square[9 * 6 + 12 * 2];
     }
@@ -39,7 +40,7 @@ public class Game
     public int FinishingLine => Track.Length - 5;
 
     public Square[] Track { get; }
-    public (Color Color, Player Player)[] Players { get; }
+    public Color[] Colors { get; }
 
     public bool IsOver
     {

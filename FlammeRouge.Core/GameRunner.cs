@@ -1,23 +1,28 @@
 namespace FlammeRouge.Core;
 
-public class GameRunner(Game game, Action<Game> renderAction)
+public class GameRunner(Dictionary<Color, Player> players, Action<Game> renderAction)
 {
-    public void RunGameLoop()
+    public Game RunGame()
     {
+        var game = new Game([..players.Keys]);
+
         //assign starters
-        foreach (var player in game.Players)
+        foreach (var player in game.Colors)
         {
-            var spots = player.Player.PickStarting();
+            var spots = players[player].PickStarting();
             foreach (var spot in spots)
-                game.PlaceRider(player.Color, spot.Type, spot.Square);
+            {
+                game.PlaceRider(player, spot.Type, spot.Square);
+                renderAction(game);
+            }
         }
 
         while (!game.IsOver)
         {
             //energy phase
             var selections = new Dictionary<Color, Dictionary<RiderType, Card>>();
-            foreach (var player in game.Players)
-                selections[player.Color] = player.Player.PickCards();
+            foreach (var player in game.Colors)
+                selections[player] = players[player].PickCards();
 
             //movement phase
             for (var i = game.Track.Length - 1; i >= 0; i--)
@@ -32,6 +37,8 @@ public class GameRunner(Game game, Action<Game> renderAction)
                         target--;
                     game.Track[target].Place(rider);
                     game.Track[i].Right = null;
+
+                    renderAction(game);
                 }
 
                 if (square.Left is not null)
@@ -43,6 +50,8 @@ public class GameRunner(Game game, Action<Game> renderAction)
                         target--;
                     game.Track[target].Place(rider);
                     game.Track[i].Left = null;
+
+                    renderAction(game);
                 }
             }
 
@@ -52,5 +61,7 @@ public class GameRunner(Game game, Action<Game> renderAction)
 
             renderAction(game);
         }
+
+        return game;
     }
 }
