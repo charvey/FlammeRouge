@@ -7,13 +7,15 @@ public class ConsoleGameRenderer
     public void Print(Game game)
     {
         Console.Clear();
-        foreach (var s in game.Track)
+        for (var i = 0; i < game.Track.Length; i++)
         {
-            //TODO print start and finish lines
+            if (i == game.StartingLine || i == game.FinishingLine)
+                Console.WriteLine(new string('-', 5));
+            var square = game.Track[i];
             Console.Write('|');
-            PrintRider(s.Right);
+            PrintRider(square.Right);
             Console.Write('|');
-            PrintRider(s.Left);
+            PrintRider(square.Left);
             Console.Write('|');
             Console.WriteLine();
         }

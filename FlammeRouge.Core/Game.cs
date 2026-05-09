@@ -26,8 +26,6 @@ public record Rider(Color Color, RiderType RiderType);
 
 public class Game
 {
-    private const int STARTING_LINE = 5;
-
     public Game(Player[] players)
     {
         if (players.Length == 0 || players.Length > Enum.GetValues<Color>().Length)
@@ -37,12 +35,15 @@ public class Game
         Track = new Square[9 * 6 + 12 * 2];
     }
 
+    public int StartingLine => 5;
+    public int FinishingLine => Track.Length - 5;
+
     public Square[] Track { get; }
     public (Color Color, Player Player)[] Players { get; }
 
     public void PlaceRider(Color color, RiderType riderType, int row)
     {
-        if (row is < 0 or >= STARTING_LINE) throw new ArgumentOutOfRangeException(nameof(row));
+        if (row < 0 || row >= StartingLine) throw new ArgumentOutOfRangeException(nameof(row));
 
         Track[row].Place(new Rider(color, riderType));
     }
