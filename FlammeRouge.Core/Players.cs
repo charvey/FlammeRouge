@@ -8,13 +8,12 @@ public abstract class Player
         { RiderType.Sprinteur, RiderDeck.CreateSprinteur() }
     };
 
-    //TODO make game aware to avoid placing on top
-    protected abstract IEnumerable<RiderType> PickStartingRiderOrder();
-    protected abstract int PickStartingRiderSquare(RiderType riderType);
+    protected abstract IEnumerable<RiderType> PickStartingRiderOrder(Game game);
+    protected abstract int PickStartingRiderSquare(Game game, RiderType riderType);
 
-    public IEnumerable<(RiderType Type, int Square)> PickStarting()
+    public IEnumerable<(RiderType Type, int Square)> PickStarting(Game game)
     {
-        return PickStartingRiderOrder().Select(r => (r, PickStartingRiderSquare(r)));
+        return PickStartingRiderOrder(game).Select(r => (r, PickStartingRiderSquare(game, r)));
     }
 
     //TODO make situation aware
@@ -38,21 +37,29 @@ public abstract class Player
 
 public class RandomPlayer : Player
 {
-    protected override IEnumerable<RiderType> PickStartingRiderOrder()
+    protected override IEnumerable<RiderType> PickStartingRiderOrder(Game game)
     {
         var order = Enum.GetValues<RiderType>();
         Random.Shared.Shuffle(order);
         return order;
     }
 
-    protected override int PickStartingRiderSquare(RiderType riderType)
+    protected override int PickStartingRiderSquare(Game game, RiderType riderType)
     {
-        return Random.Shared.Next(5); //todo reference game
+        int row;
+        do
+        {
+            row = Random.Shared.Next(game.StartingLine);
+        } while (!game.Track[row].HasSpace);
+
+        return row;
     }
 
     protected override IEnumerable<RiderType> PickEnergyRiderOrder()
     {
-        return PickStartingRiderOrder();
+        var order = Enum.GetValues<RiderType>();
+        Random.Shared.Shuffle(order);
+        return order;
     }
 
     protected override Card PickEnergyCard(IReadOnlyList<Card> hand)
@@ -63,14 +70,17 @@ public class RandomPlayer : Player
 
 public class MinPlayer : Player
 {
-    protected override IEnumerable<RiderType> PickStartingRiderOrder()
+    protected override IEnumerable<RiderType> PickStartingRiderOrder(Game game)
     {
         return Enum.GetValues<RiderType>();
     }
 
-    protected override int PickStartingRiderSquare(RiderType riderType)
+    protected override int PickStartingRiderSquare(Game game, RiderType riderType)
     {
-        return 0;
+        return game.Track.Select((s, i) => (s, i))
+            .Where(x => x.i < game.StartingLine)
+            .Where(x => x.s.HasSpace)
+            .Min(x => x.i);
     }
 
     protected override IEnumerable<RiderType> PickEnergyRiderOrder()
@@ -86,14 +96,17 @@ public class MinPlayer : Player
 
 public class MaxPlayer : Player
 {
-    protected override IEnumerable<RiderType> PickStartingRiderOrder()
+    protected override IEnumerable<RiderType> PickStartingRiderOrder(Game game)
     {
         return Enum.GetValues<RiderType>();
     }
 
-    protected override int PickStartingRiderSquare(RiderType riderType)
+    protected override int PickStartingRiderSquare(Game game, RiderType riderType)
     {
-        return 4; //todo reference game
+        return game.Track.Select((s, i) => (s, i))
+            .Where(x => x.i < game.StartingLine)
+            .Where(x => x.s.HasSpace)
+            .Max(x => x.i);
     }
 
     protected override IEnumerable<RiderType> PickEnergyRiderOrder()

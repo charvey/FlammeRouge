@@ -2,7 +2,8 @@
 
 public record struct Square(Rider? Right, Rider? Left)
 {
-    public bool HasSpace => Right is null && Left is null;
+    public bool HasRider => Right is not null || Left is not null;
+    public bool HasSpace => Right is null || Left is null;
 
     public void Place(Rider rider)
     {
@@ -47,7 +48,7 @@ public class Game
         get
         {
             for (var i = FinishingLine; i < Track.Length; i++)
-                if (!Track[i].HasSpace)
+                if (Track[i].HasRider)
                     return true;
 
             return false;

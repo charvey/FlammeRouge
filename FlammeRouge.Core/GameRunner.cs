@@ -9,7 +9,7 @@ public class GameRunner(Dictionary<Color, Player> players, Action<Game> renderAc
         //assign starters
         foreach (var player in game.Colors)
         {
-            var spots = players[player].PickStarting();
+            var spots = players[player].PickStarting(game);
             foreach (var spot in spots)
             {
                 game.PlaceRider(player, spot.Type, spot.Square);

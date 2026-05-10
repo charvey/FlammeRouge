@@ -4,7 +4,7 @@ using FlammeRouge.Terminal;
 var renderer = new ConsoleGameRenderer();
 var gameRunner = new GameRunner(new Dictionary<Color, Player>
 {
-    { Color.Red, new RandomPlayer() }, { Color.Blue, new RandomPlayer() }
+    { Color.Red, new MinPlayer() }, { Color.Blue, new RandomPlayer() }, { Color.Green, new MaxPlayer() }
 }, g =>
 {
     renderer.Print(g);
