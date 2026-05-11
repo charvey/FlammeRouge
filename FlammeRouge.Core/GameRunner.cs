@@ -21,8 +21,8 @@ public class GameRunner(Dictionary<Color, Player> players, Action<Game> renderAc
         {
             //energy phase
             var selections = new Dictionary<Color, Dictionary<RiderType, Card>>();
-            foreach (var player in game.Colors)
-                selections[player] = players[player].PickCards();
+            foreach (var color in game.Colors)
+                selections[color] = players[color].PickCards(game.Decks[color]);
 
             //movement phase
             for (var i = game.Track.Length - 1; i >= 0; i--)
@@ -56,10 +56,32 @@ public class GameRunner(Dictionary<Color, Player> players, Action<Game> renderAc
             }
 
             //end phase
-            //todo slipstream
-            //todo exhaustion
+            //slipstream
+            for (var i = 0; i < game.Track.Length - 2; i++)
+                if (game.Track[i].HasRider && !game.Track[i + 1].HasRider && game.Track[i + 2].HasRider)
+                {
+                    var j = i;
+                    while (game.Track[j].HasRider)
+                    {
+                        game.Track[j + 1].Left = game.Track[j].Left;
+                        game.Track[j].Left = null;
+                        game.Track[j + 1].Right = game.Track[j].Right;
+                        game.Track[j].Right = null;
+                        i--;
+                        renderAction(game);
+                    }
+                }
 
-            renderAction(game);
+            //exhaustion
+            for (var i = 0; i < game.Track.Length - 1; i++)
+                if (game.Track[i].HasRider && !game.Track[i + 1].HasRider)
+                {
+                    var rightRider = game.Track[i].Right;
+                    if (rightRider is not null) game.Decks[rightRider.Color][rightRider.RiderType].AddExhaustion();
+
+                    var leftRider = game.Track[i].Left;
+                    if (leftRider is not null) game.Decks[leftRider.Color][leftRider.RiderType].AddExhaustion();
+                }
         }
 
         return game;

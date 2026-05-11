@@ -2,12 +2,6 @@ namespace FlammeRouge.Core;
 
 public abstract class Player
 {
-    private readonly Dictionary<RiderType, RiderDeck> decks = new()
-    {
-        { RiderType.Rouleur, RiderDeck.CreateRouleur() },
-        { RiderType.Sprinteur, RiderDeck.CreateSprinteur() }
-    };
-
     protected abstract IEnumerable<RiderType> PickStartingRiderOrder(Game game);
     protected abstract int PickStartingRiderSquare(Game game, RiderType riderType);
 
@@ -20,7 +14,7 @@ public abstract class Player
     protected abstract IEnumerable<RiderType> PickEnergyRiderOrder();
     protected abstract Card PickEnergyCard(IReadOnlyList<Card> hand);
 
-    public Dictionary<RiderType, Card> PickCards()
+    public Dictionary<RiderType, Card> PickCards(Dictionary<RiderType, RiderDeck> decks)
     {
         var result = new Dictionary<RiderType, Card>();
         foreach (var riderType in PickEnergyRiderOrder())

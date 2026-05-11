@@ -35,6 +35,12 @@ public class Game
         Random.Shared.Shuffle(Colors);
 
         Track = new Square[9 * 6 + 12 * 2];
+
+        Decks = colors.ToDictionary(c => c, _ => new Dictionary<RiderType, RiderDeck>
+        {
+            { RiderType.Rouleur, RiderDeck.CreateRouleur() },
+            { RiderType.Sprinteur, RiderDeck.CreateSprinteur() }
+        });
     }
 
     public int StartingLine => 5;
@@ -42,6 +48,8 @@ public class Game
 
     public Square[] Track { get; }
     public Color[] Colors { get; }
+
+    public IReadOnlyDictionary<Color, Dictionary<RiderType, RiderDeck>> Decks { get; }
 
     public bool IsOver
     {
